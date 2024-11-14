@@ -10,6 +10,10 @@ interface StepWithHandler<T> {
     getVisibleStep?: (context: T) => StepWithHandler<T> | undefined
 }
 
+export interface StepChain {
+    currentStepIndex: number
+}
+
 export class ConditionalStepBuilder<T> {
     readonly steps: StepWithHandler<T>[] = []
 
@@ -21,9 +25,7 @@ export class ConditionalStepBuilder<T> {
     build(initialContext: T) {
         const steps = this.steps
 
-        return function StepChain({currentStepIndex}: {
-            currentStepIndex: number
-        }) {
+        return function StepChain({currentStepIndex}: StepChain) {
             const [context, setContext] = useState(initialContext);
 
             const step = steps[currentStepIndex];
@@ -34,7 +36,7 @@ export class ConditionalStepBuilder<T> {
                 return <StepComponent context={context} setContext={setContext}/>;
             }
 
-            return <div>Все шаги завершены!</div>;
+            return null;
         };
     }
 }
