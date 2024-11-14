@@ -1,37 +1,48 @@
-import React, {memo, useState} from 'react';
+import React, {FC, memo, useState} from 'react';
 import {Box, Button, Drawer, IconButton, Typography} from "@mui/material";
 import {IoMdClose} from "react-icons/io";
 import "./wizard-drawer.component.css"
 import {useRerenderCount} from "../../hooks/useRerenderCount";
+import {ConditionalStepBuilder, StepHandlerProps} from "../../builders/ConditionalStepBuilder";
 
-type WizardDrawerProps = {
+interface WizardDrawerProps {
     title: string | null;
     open: boolean;
     onClose: () => void;
-};
+}
+
+const Step1: FC<StepHandlerProps<any>> = ({context, setContext}) => (<>Step 1</>)
+const Step2: FC<StepHandlerProps<any>> = ({context, setContext}) => (<>Step 2</>)
+const Step3: FC<StepHandlerProps<any>> = ({context, setContext}) => (<>Step 3</>)
+
+const StepChainBuilder = new ConditionalStepBuilder()
+    .add(Step1)
+    .add(Step2)
+    .add(Step3);
+
+
+const StepChain = StepChainBuilder.build({title: 'Product'});
 
 const WizardDrawer: React.FC<WizardDrawerProps> = ({title, open, onClose}) => {
-    const steps = ['Step 1', 'Step 2', 'Step 3'];
-    const [activeStep, setActiveStep] = useState(0);
-    const {count} = useRerenderCount()
+    const {count} = useRerenderCount();
+    const [context, setContext] = useState({title});
+    const [currentStepIndex, setStepIndex] = useState(0);
 
-    const handleNext = () => setActiveStep((prev) => prev + 1);
-    const handleBack = () => setActiveStep((prev) => prev - 1);
+    const handleNext = () => setStepIndex((prevIndex) => Math.min(prevIndex + 1, StepChainBuilder.steps.length - 1));
+    const handleBack = () => setStepIndex((prevIndex) => Math.max(prevIndex - 1, 0));
     const handleFinish = () => {
-        setActiveStep(0)
+        setStepIndex(0);
         onClose();
     };
 
     const handleClose = () => {
-        setActiveStep(0)
-        onClose()
-    }
+        setStepIndex(0);
+        onClose();
+    };
 
     return (
         <Drawer anchor="right" open={open} onClose={handleClose}>
-            <p>
-                Drawer Render Count: {count}
-            </p>
+            <p>Drawer Render Count: {count}</p>
             <Box className="container" width={400} p={3}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     {title && <Typography variant="h6">{title}</Typography>}
@@ -41,16 +52,14 @@ const WizardDrawer: React.FC<WizardDrawerProps> = ({title, open, onClose}) => {
                 </Box>
 
                 <Box my={4}>
-                    {activeStep === 0 && <div>Step content 1</div>}
-                    {activeStep === 1 && <div>Step content 2</div>}
-                    {activeStep === 2 && <div>Step content 3</div>}
+                    <StepChain currentStepIndex={currentStepIndex}/>
                 </Box>
 
                 <Box className="bottom-toolbar">
-                    <Button disabled={activeStep === 0} onClick={handleBack}>
+                    <Button disabled={currentStepIndex === 0} onClick={handleBack}>
                         Back
                     </Button>
-                    {activeStep === steps.length - 1 ? (
+                    {currentStepIndex === StepChainBuilder.steps.length - 1 ? (
                         <Button variant="contained" color="primary" onClick={handleFinish}>
                             Finish
                         </Button>
