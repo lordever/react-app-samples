@@ -26,7 +26,7 @@ export interface StepChain {
 export class ConditionalStepBuilder<T> {
     readonly steps: StepWithHandler<T>[] = []
 
-    add(step: React.FC<StepHandlerProps<T>>, getVisibleStep?: (context: any) => StepWithHandler<T> | undefined): this {
+    add(step: React.FC<StepHandlerProps<T>>, getVisibleStep?: (context: T) => StepWithHandler<T> | undefined): this {
         this.steps.push({component: step, getVisibleStep})
         return this;
     }

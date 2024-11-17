@@ -1,18 +1,14 @@
-import React, {FC} from 'react';
+import React, {FC, memo, useCallback} from 'react';
 import {StepHandlerProps, StepPosition} from "../../../../builders/ConditionalStepBuilder";
 import {ProductFlowModel} from "../model/product-flow.model";
 import {Box, Typography} from "@mui/material";
 import WizardToolbar from "../../../wizard-drawer/wizard-toolbar.component";
 
 const Step2: FC<StepHandlerProps<ProductFlowModel>> = ({context, setContext, onStepChange, onClose}) => {
-    const handleNext = () => {
+    const handleNext = useCallback(() => {
         setContext({...context, price: 100})
         onStepChange(StepPosition.NEXT)
-    }
-
-    const handleBack = () => {
-        onStepChange(StepPosition.BACK);
-    }
+    }, [context, setContext, onStepChange])
 
     return (
         <Box display="flex" flexDirection="column" height="100%">
@@ -28,10 +24,10 @@ const Step2: FC<StepHandlerProps<ProductFlowModel>> = ({context, setContext, onS
             <WizardToolbar
                 onClose={onClose}
                 onNext={handleNext}
-                onBack={handleBack}
+                onBack={() => onStepChange(StepPosition.BACK)}
             />
         </Box>
     );
 };
 
-export default Step2;
+export default memo(Step2);
