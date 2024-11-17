@@ -12,6 +12,7 @@ class BootstrapData(
     val productRepository: ProductRepository,
     val quoteRepository: QuoteRepository,
     val characteristicRepository: CharacteristicRepository,
+    val quoteItemCharacteristicRepository: QuoteItemCharacteristicRepository,
     val quoteItemRepository: QuoteItemRepository,
     val priceRepository: PriceRepository,
     val productPriceRepository: ProductPriceRepository
@@ -128,24 +129,31 @@ class BootstrapData(
                         quoteItemRepository.save(quoteItem1),
                         quoteItemRepository.save(quoteItem2),
                         quoteItemRepository.save(quoteItem3),
-                    ).flatMapMany { savedQuoteItems ->
+                    ).flatMap { savedQuoteItems ->
+
+                        val savedQuoteItemList = listOf(savedQuoteItems.t1, savedQuoteItems.t2, savedQuoteItems.t3)
+
+                        saveQuoteItemCharacteristics(savedQuoteItemList)
+                            .thenReturn(savedQuoteItemList)
+
+                    }.flatMapMany { savedQuoteItemList ->
                         val prices = listOf(
                             QuoteItemPrice(
-                                quoteItemId = savedQuoteItems.t1.id,
+                                quoteItemId = savedQuoteItemList[0].id,
                                 recurrent = 20,
                                 oneTime = 10,
                                 upfront = 0,
                                 commitment = 50
                             ),
                             QuoteItemPrice(
-                                quoteItemId = savedQuoteItems.t2.id,
+                                quoteItemId = savedQuoteItemList[1].id,
                                 recurrent = 40,
                                 oneTime = 50,
                                 upfront = 0,
                                 commitment = 100
                             ),
                             QuoteItemPrice(
-                                quoteItemId = savedQuoteItems.t3.id,
+                                quoteItemId = savedQuoteItemList[2].id,
                                 recurrent = 0,
                                 oneTime = 0,
                                 upfront = 999,
@@ -158,5 +166,17 @@ class BootstrapData(
                 }.subscribe()
             }
         }
+    }
+
+    private fun saveQuoteItemCharacteristics(quoteItems: List<QuoteItem>): Mono<Void> {
+        val characteristics = listOf(
+            QuoteItemCharacteristic(name = "Phone Number", valueText = "+111111111", quoteItemId = quoteItems[0].id),
+            QuoteItemCharacteristic(name = "Type", valueText = "Fiber", quoteItemId = quoteItems[1].id),
+            QuoteItemCharacteristic(name = "Speed", valueText = "100 Mbps", quoteItemId = quoteItems[1].id),
+            QuoteItemCharacteristic(name = "Storage", valueText = "128 GB", quoteItemId = quoteItems[2].id),
+            QuoteItemCharacteristic(name = "Color", valueText = "Midnight", quoteItemId = quoteItems[2].id)
+        )
+
+        return quoteItemCharacteristicRepository.saveAll(characteristics).then()
     }
 }

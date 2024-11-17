@@ -37,6 +37,14 @@ CREATE TABLE if NOT EXISTS quote_item
     product_id integer REFERENCES product (id)
 );
 
+CREATE TABLE if NOT EXISTS quote_item_characteristic
+(
+    id         integer NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name       VARCHAR(50),
+    value_text VARCHAR(255),
+    quote_item_id integer REFERENCES quote_item (id)
+);
+
 CREATE TABLE if NOT EXISTS quote_item_price
 (
     id              integer NOT NULL PRIMARY KEY AUTO_INCREMENT,
