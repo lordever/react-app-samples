@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {useSelector} from "react-redux";
 import {selectProducts} from "../../../store/products/products.selector";
 import ProductList from "./product-list.component";
@@ -11,14 +11,14 @@ const ProductListContainer = () => {
     const [openDrawer, setOpenDrawer] = useState(false)
     const [productId, setProductId] = useState<number>()
 
-    const handleOpenDrawer = (productId: number) => {
+    const handleOpenDrawer = useCallback((productId: number) => {
         setProductId(productId);
         setOpenDrawer(true)
-    }
+    }, [])
 
-    const handleCloseDrawer = () => {
+    const handleCloseDrawer = useCallback(() => {
         setOpenDrawer(false)
-    }
+    }, [])
 
     return (
         <div>

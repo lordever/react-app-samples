@@ -1,8 +1,15 @@
 import React, {useState} from 'react';
 
+export enum StepPosition {
+    NEXT = "next",
+    BACK = "back"
+}
+
 export interface StepHandlerProps<T> {
     context: T;
     setContext: (context: T) => void;
+    onStepChange: (position: StepPosition) => void;
+    onClose: () => void;
 }
 
 interface StepWithHandler<T> {
@@ -11,21 +18,27 @@ interface StepWithHandler<T> {
 }
 
 export interface StepChain {
-    currentStepIndex: number
+    currentStepIndex: number,
+    onClose: () => void;
+    onStepIndexChange: (stepIndex: number) => void;
 }
 
 export class ConditionalStepBuilder<T> {
     readonly steps: StepWithHandler<T>[] = []
 
-    add(step: React.FC<StepHandlerProps<T>>, getVisibleStep?: (context: any) => StepWithHandler<T> | undefined): ConditionalStepBuilder<T> {
+    add(step: React.FC<StepHandlerProps<T>>, getVisibleStep?: (context: any) => StepWithHandler<T> | undefined): this {
         this.steps.push({component: step, getVisibleStep})
         return this;
     }
 
-    build(initialContext: T) {
+    build(initialContext: T): ({
+                                   currentStepIndex,
+                                   onStepIndexChange,
+                                   onClose
+                               }: StepChain) => (React.JSX.Element | null) {
         const steps = this.steps
 
-        return function StepChain({currentStepIndex}: StepChain) {
+        return function StepChain({currentStepIndex, onStepIndexChange, onClose}: StepChain) {
             const [context, setContext] = useState(initialContext);
 
             const step = steps[currentStepIndex];
@@ -33,7 +46,23 @@ export class ConditionalStepBuilder<T> {
 
             if (visibleStep) {
                 const StepComponent = visibleStep.component;
-                return <StepComponent context={context} setContext={setContext}/>;
+
+                const handleStepChange = (position: StepPosition) => {
+                    if (position === StepPosition.NEXT) {
+                        onStepIndexChange(currentStepIndex + 1);
+                    }
+
+                    if (position === StepPosition.BACK) {
+                        onStepIndexChange(currentStepIndex - 1);
+                    }
+                }
+
+                return <StepComponent
+                    context={context}
+                    setContext={setContext}
+                    onClose={onClose}
+                    onStepChange={handleStepChange}
+                />;
             }
 
             return null;
