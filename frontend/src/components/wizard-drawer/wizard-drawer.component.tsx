@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {Box, Drawer, IconButton, Typography} from "@mui/material";
 import {IoMdClose} from "react-icons/io";
 import "./wizard-drawer.component.css"
@@ -19,16 +19,8 @@ const WizardDrawer: React.FC<WizardDrawerProps> = ({title, open, chain, onClose,
         setCurrentStepIndex(Math.min(stepIndex, chain.steps.length - 1));
     }, [chain.steps.length]);
 
-    useEffect(() => {
-        setCurrentStepIndex(0);
-
-        return () => {
-            setCurrentStepIndex(0);
-        }
-    }, [open]);
-
     return (
-        <Drawer anchor="right" open={open} onClose={onClose}>
+        <Drawer anchor="right" open={open} onClose={onClose} onTransitionExited={() => setCurrentStepIndex(0)}>
             <Box className="container" width={400} p={3}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     {title && <Typography variant="h6">{title}</Typography>}

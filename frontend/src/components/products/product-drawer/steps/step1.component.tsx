@@ -17,10 +17,9 @@ const Step1: FC<StepHandlerProps<ProductFlowModel>> = ({context, setContext, onS
             setLoading(false)
             setContext({...context, characteristic: "Model: S"});
             onStepChange(StepPosition.NEXT)
-        }, 5000)
+        }, 2000)
 
         setLoading(true);
-
     }
 
     return (
