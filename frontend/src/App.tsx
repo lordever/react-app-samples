@@ -8,6 +8,8 @@ import {RouterProvider} from "react-router-dom";
 import {router} from "./routes/router";
 import {Provider} from "react-redux";
 import {store} from "./store/store";
+import {ThemeProvider} from "@mui/material";
+import theme from "./theme";
 
 
 function App() {
@@ -15,7 +17,9 @@ function App() {
         <div className="App">
             <React.StrictMode>
                 <Provider store={store}>
-                    <RouterProvider router={router}/>
+                    <ThemeProvider theme={theme}>
+                        <RouterProvider router={router}/>
+                    </ThemeProvider>
                 </Provider>
             </React.StrictMode>
         </div>

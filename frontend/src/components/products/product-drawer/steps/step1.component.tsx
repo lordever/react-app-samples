@@ -1,13 +1,26 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {StepHandlerProps, StepPosition} from "../../../../builders/ConditionalStepBuilder";
 import {ProductFlowModel} from "../model/product-flow.model";
 import {Box, Typography} from "@mui/material";
 import WizardToolbar from "../../../wizard-drawer/wizard-toolbar.component";
 
 const Step1: FC<StepHandlerProps<ProductFlowModel>> = ({context, setContext, onStepChange, onClose}) => {
+    const [loading, setLoading] = useState(false);
+
     const handleNext = () => {
-        setContext({...context, characteristic: "Model: S"});
-        onStepChange(StepPosition.NEXT)
+        if (context.characteristic) {
+            onStepChange(StepPosition.NEXT);
+            return;
+        }
+
+        setTimeout(() => {
+            setLoading(false)
+            setContext({...context, characteristic: "Model: S"});
+            onStepChange(StepPosition.NEXT)
+        }, 5000)
+
+        setLoading(true);
+
     }
 
     return (
@@ -20,6 +33,7 @@ const Step1: FC<StepHandlerProps<ProductFlowModel>> = ({context, setContext, onS
             <WizardToolbar
                 onClose={onClose}
                 isBackDisabled
+                isLoading={loading}
                 onNext={handleNext}
             />
         </Box>

@@ -28,7 +28,7 @@ const WizardToolbar: FC<WizardToolbarProps> = ({
                     onClick={onBack}
                     variant="outlined"
                 >
-                    {isLoading ? <CircularProgress size={20}/> : 'Back'}
+                    Back
                 </Button>)
             }
             {onNext ? (

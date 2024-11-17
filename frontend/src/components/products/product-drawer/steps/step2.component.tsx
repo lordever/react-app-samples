@@ -15,8 +15,8 @@ const Step2: FC<StepHandlerProps<ProductFlowModel>> = ({context, setContext, onS
     }
 
     return (
-        <>
-            <Box display="flex" flexDirection="column" alignItems="start" p={2} gap={1}>
+        <Box display="flex" flexDirection="column" height="100%">
+            <Box display="flex" flexDirection="column" alignItems="start">
                 <Typography variant="h6" component="span">
                     Title: {context.title}
                 </Typography>
@@ -30,7 +30,7 @@ const Step2: FC<StepHandlerProps<ProductFlowModel>> = ({context, setContext, onS
                 onNext={handleNext}
                 onBack={handleBack}
             />
-        </>
+        </Box>
     );
 };
 
