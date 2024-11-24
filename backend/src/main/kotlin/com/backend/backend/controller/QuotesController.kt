@@ -1,5 +1,6 @@
 package com.backend.backend.controller
 
+import com.backend.backend.model.ProductDTO
 import com.backend.backend.model.QuoteDTO
 import com.backend.backend.services.QuoteService
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,4 +29,8 @@ class QuotesController(var quoteService: QuoteService) {
     @PostMapping(QUOTES_PATH)
     fun createQuote(@RequestBody quoteDTO: QuoteDTO) =
         quoteService.createQuote(quoteDTO)
+
+    @PostMapping("$QUOTES_PATH_ID/add-quote-item")
+    fun addQuoteItem(@PathVariable quoteId: Int, @RequestBody productDTO: ProductDTO) =
+        quoteService.addQuoteItem(quoteId, productDTO)
 }

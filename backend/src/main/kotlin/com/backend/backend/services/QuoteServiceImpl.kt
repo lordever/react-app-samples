@@ -2,6 +2,7 @@ package com.backend.backend.services
 
 import com.backend.backend.domain.*
 import com.backend.backend.mappers.*
+import com.backend.backend.model.ProductDTO
 import com.backend.backend.model.QuoteDTO
 import com.backend.backend.model.QuoteTotalPriceDTO
 import com.backend.backend.repositories.*
@@ -20,7 +21,8 @@ class QuoteServiceImpl(
     val priceRepository: PriceRepository,
     val quoteItemCharacteristicMapper: QuoteItemCharacteristicMapper,
     val quoteItemCharacteristicRepository: QuoteItemCharacteristicRepository,
-    val productService: ProductService
+    val productService: ProductService,
+    val quoteItemService: QuoteItemService
 ) : QuoteService {
     override fun findAll(): Flux<QuoteDTO> =
         quoteRepository
@@ -69,7 +71,13 @@ class QuoteServiceImpl(
         }
     }
 
-    fun mapQuoteToDTO(quote: Quote): Mono<QuoteDTO> {
+    override fun addQuoteItem(quoteId: Int, productDTO: ProductDTO): Mono<QuoteDTO> {
+        return quoteItemService.addOne(quoteId, productDTO).flatMap {
+            findById(quoteId)
+        }
+    }
+
+    private fun mapQuoteToDTO(quote: Quote): Mono<QuoteDTO> {
         val quoteId = quote.id
 
         val monoQuoteDTO = if (quoteId != null) {
@@ -78,7 +86,11 @@ class QuoteServiceImpl(
                     val quoteItemId = quoteItem.id
                     val productId = quoteItem.productId
                     if (quoteItemId != null && productId != null) {
-                        Mono.zip(getPriceList(quoteItemId), findProductById(productId), getCharacteristicList(quoteItemId))
+                        Mono.zip(
+                            getPriceList(quoteItemId),
+                            findProductById(productId),
+                            getCharacteristicList(quoteItemId)
+                        )
                             .flatMap { tuple ->
                                 val prices: List<QuoteItemPrice> = tuple.t1
                                 val product: Product = tuple.t2

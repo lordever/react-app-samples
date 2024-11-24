@@ -12,5 +12,6 @@ interface QuoteItemCharacteristicMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "quoteItemId", target = "quoteItemId")
+    @Mapping(source = "characteristicDTO.value", target = "valueText")
     fun toCharacteristicByQuoteItemId(characteristicDTO: QuoteItemCharacteristicDTO, quoteItemId: Int): QuoteItemCharacteristic
 }

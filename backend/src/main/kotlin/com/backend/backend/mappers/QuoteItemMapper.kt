@@ -34,5 +34,6 @@ interface QuoteItemMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "quoteId", source = "quoteId")
+    @Mapping(target = "productId", source = "quoteItem.product.id")
     fun toQuoteItemByQuoteId(quoteItem: QuoteItemDTO, quoteId: Int): QuoteItem
 }
