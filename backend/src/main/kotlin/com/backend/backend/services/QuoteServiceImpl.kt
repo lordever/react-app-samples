@@ -17,9 +17,7 @@ class QuoteServiceImpl(
     val productRepository: ProductRepository,
     val quoteMapper: QuoteMapper,
     val quoteItemMapper: QuoteItemMapper,
-    val priceMapper: PriceMapper,
     val priceRepository: PriceRepository,
-    val quoteItemCharacteristicMapper: QuoteItemCharacteristicMapper,
     val quoteItemCharacteristicRepository: QuoteItemCharacteristicRepository,
     val productService: ProductService,
     val quoteItemService: QuoteItemService
@@ -36,45 +34,15 @@ class QuoteServiceImpl(
 
     override fun createQuote(quoteDTO: QuoteDTO): Mono<QuoteDTO> {
         val quoteEntity = quoteMapper.toQuote(quoteDTO)
-        val savedQuoteMono: Mono<Quote> = quoteRepository.save(quoteEntity).cache()
 
-        val savedQuoteItems = savedQuoteMono.flatMap { savedQuote ->
-            Flux.fromIterable(quoteDTO.quoteItems)
-                .flatMap { quoteItem ->
-                    val updatedQuoteItem = quoteItemMapper.toQuoteItemByQuoteId(quoteItem, quoteId = savedQuote.id!!)
-                    quoteItemRepository.save(updatedQuoteItem)
-                        .flatMap { savedQuoteItem ->
-                            val characteristics = quoteItem.characteristic.map { characteristic ->
-                                quoteItemCharacteristicMapper.toCharacteristicByQuoteItemId(
-                                    characteristic,
-                                    savedQuoteItem.id!!
-                                )
-                            }
-                            val savedCharacteristics =
-                                quoteItemCharacteristicRepository.saveAll(characteristics).collectList()
-
-                            val prices = quoteItem.prices.map { price ->
-                                priceMapper.toPriceByQuoteItemId(price, savedQuoteItem.id!!)
-                            }
-                            val savedPrices = priceRepository.saveAll(prices).collectList()
-
-                            Mono.zip(savedCharacteristics, savedPrices) { _, _ -> savedQuoteItem }
-                        }
-                }
-                .collectList()
-        }
-
-        return savedQuoteItems.flatMap {
-            savedQuoteMono.flatMap { savedQuote ->
+        return quoteRepository.save(quoteEntity)
+            .flatMap { savedQuote ->
+                quoteItemService
+                    .addAll(savedQuote.id!!, quoteDTO.quoteItems)
+                    .thenReturn(savedQuote)
+            }.flatMap { savedQuote ->
                 mapQuoteToDTO(savedQuote)
             }
-        }
-    }
-
-    override fun addQuoteItem(quoteId: Int, productDTO: ProductDTO): Mono<QuoteDTO> {
-        return quoteItemService.addOne(quoteId, productDTO).flatMap {
-            findById(quoteId)
-        }
     }
 
     private fun mapQuoteToDTO(quote: Quote): Mono<QuoteDTO> {

@@ -4,20 +4,28 @@ import com.backend.backend.domain.QuoteItem
 import com.backend.backend.domain.QuoteItemCharacteristic
 import com.backend.backend.domain.QuoteItemPrice
 import com.backend.backend.domain.QuoteItemType
+import com.backend.backend.mappers.PriceMapper
+import com.backend.backend.mappers.QuoteItemCharacteristicMapper
+import com.backend.backend.mappers.QuoteItemMapper
 import com.backend.backend.model.CharacteristicDTO
 import com.backend.backend.model.ProductDTO
 import com.backend.backend.model.ProductPriceDTO
+import com.backend.backend.model.QuoteItemDTO
 import com.backend.backend.repositories.PriceRepository
 import com.backend.backend.repositories.QuoteItemCharacteristicRepository
 import com.backend.backend.repositories.QuoteItemRepository
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Service
 class QuoteItemServiceImpl(
-    val quoteItemRepository: QuoteItemRepository,
-    val quoteItemCharacteristicRepository: QuoteItemCharacteristicRepository,
-    val quoteItemPriceRepository: PriceRepository,
+    val repository: QuoteItemRepository,
+    val characteristicRepository: QuoteItemCharacteristicRepository,
+    val priceRepository: PriceRepository,
+    val quoteItemMapper: QuoteItemMapper,
+    val quoteItemCharacteristicMapper: QuoteItemCharacteristicMapper,
+    val priceMapper: PriceMapper,
 ) : QuoteItemService {
     override fun addOne(quoteId: Int, product: ProductDTO): Mono<QuoteItem> {
         val quoteItem = QuoteItem(
@@ -27,20 +35,46 @@ class QuoteItemServiceImpl(
             productId = product.id
         )
 
-        return quoteItemRepository.save(quoteItem)
+        return repository.save(quoteItem)
             .flatMap { newQuoteItem ->
                 val characteristics =
                     transformProductCharToQuoteItemChar(quoteItem.id!!, product.characteristics)
 
-                quoteItemCharacteristicRepository.saveAll(characteristics)
+                characteristicRepository.saveAll(characteristics)
                     .then()
                     .thenReturn(newQuoteItem)
             }.flatMap { newQuoteItem ->
                 val prices = transformProductPriceToQuoteItemPrice(newQuoteItem.id!!, product.prices)
-                quoteItemPriceRepository.saveAll(prices)
+                priceRepository.saveAll(prices)
                     .then()
                     .thenReturn(newQuoteItem)
             }
+    }
+
+    override fun addAll(quoteId: Int, quoteItems: List<QuoteItemDTO>): Mono<List<QuoteItem>> {
+        return Flux.fromIterable(quoteItems)
+            .flatMap { quoteItem: QuoteItemDTO ->
+                val updatedQuoteItem = quoteItemMapper.toQuoteItemByQuoteId(quoteItem, quoteId = quoteId)
+                repository.save(updatedQuoteItem)
+                    .flatMap { savedQuoteItem: QuoteItem ->
+                        val characteristics = quoteItem.characteristic.map { characteristic ->
+                            quoteItemCharacteristicMapper.toCharacteristicByQuoteItemId(
+                                characteristic,
+                                savedQuoteItem.id!!
+                            )
+                        }
+                        val savedCharacteristics =
+                            characteristicRepository.saveAll(characteristics).collectList()
+
+                        val prices = quoteItem.prices.map { price ->
+                            priceMapper.toPriceByQuoteItemId(price, savedQuoteItem.id!!)
+                        }
+                        val savedPrices = priceRepository.saveAll(prices).collectList()
+
+                        Mono.zip(savedCharacteristics, savedPrices) { _, _ -> savedQuoteItem }
+                    }
+            }
+            .collectList()
     }
 
     private fun transformProductCharToQuoteItemChar(

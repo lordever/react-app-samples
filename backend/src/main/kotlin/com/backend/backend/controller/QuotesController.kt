@@ -2,6 +2,7 @@ package com.backend.backend.controller
 
 import com.backend.backend.model.ProductDTO
 import com.backend.backend.model.QuoteDTO
+import com.backend.backend.services.QuoteItemService
 import com.backend.backend.services.QuoteService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -12,7 +13,10 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @RestController
-class QuotesController(var quoteService: QuoteService) {
+class QuotesController(
+    val quoteService: QuoteService,
+    val quoteItemService: QuoteItemService
+) {
     companion object {
         const val QUOTES_PATH = "/api/v1/quotes"
         const val QUOTES_PATH_ID = "$QUOTES_PATH/{quoteId}"
@@ -32,5 +36,5 @@ class QuotesController(var quoteService: QuoteService) {
 
     @PostMapping("$QUOTES_PATH_ID/add-quote-item")
     fun addQuoteItem(@PathVariable quoteId: Int, @RequestBody productDTO: ProductDTO) =
-        quoteService.addQuoteItem(quoteId, productDTO)
+        quoteItemService.addOne(quoteId, productDTO)
 }
