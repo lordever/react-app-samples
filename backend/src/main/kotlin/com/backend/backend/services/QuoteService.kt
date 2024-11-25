@@ -8,4 +8,5 @@ interface QuoteService {
     fun findAll(): Flux<QuoteDTO>
     fun findById(quoteId: Int): Mono<QuoteDTO>
     fun createQuote(quoteDTO: QuoteDTO): Mono<QuoteDTO>
+    fun delete(quoteId: Int): Mono<Void>
 }

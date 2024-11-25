@@ -35,6 +35,10 @@ class QuotesController(
     fun createQuote(@RequestBody quoteDTO: QuoteDTO) =
         quoteService.createQuote(quoteDTO)
 
+    @DeleteMapping("$QUOTES_PATH_ID/delete")
+    fun deleteQuote(@PathVariable quoteId: Int) =
+        quoteService.delete(quoteId)
+
     @PostMapping("$QUOTES_PATH_ID/add-quote-item")
     fun addQuoteItem(@PathVariable quoteId: Int, @RequestBody productDTO: ProductDTO) =
         quoteItemService.addOne(quoteId, productDTO)

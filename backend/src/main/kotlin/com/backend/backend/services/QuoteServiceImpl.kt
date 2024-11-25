@@ -45,6 +45,13 @@ class QuoteServiceImpl(
             }
     }
 
+    override fun delete(quoteId: Int): Mono<Void> {
+        return findById(quoteId)
+            .flatMapMany { quote -> Flux.fromIterable(quote.quoteItems) }
+            .flatMap { quoteItem -> quoteItemService.delete(quoteItem.id) }
+            .then(quoteRepository.deleteById(quoteId))
+    }
+
     private fun mapQuoteToDTO(quote: Quote): Mono<QuoteDTO> {
         val quoteId = quote.id
 
