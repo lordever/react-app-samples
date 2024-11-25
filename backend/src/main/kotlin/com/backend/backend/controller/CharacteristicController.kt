@@ -15,7 +15,7 @@ class CharacteristicController(
     }
 
     @GetMapping(CHARACTERISTICS_PATH)
-    fun listProducts(): Flux<Characteristic> {
+    fun listCharacteristic(): Flux<Characteristic> {
         return characteristicService.findAllEntities()
     }
 }
