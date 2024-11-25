@@ -1,8 +1,10 @@
-import React, {FC, memo, useMemo} from 'react';
+import React, {FC, memo, useCallback, useMemo} from 'react';
 import {useSelector} from "react-redux";
 import {selectProductById} from "../../../store/products/products.selector";
 import WizardDrawer from "../../wizard-drawer/wizard-drawer.component";
 import StepChainBuilder from "./builder/step-chain.builder";
+import {useAppDispatch} from "../../../hooks/store.hook";
+import {clearQuote} from "../../../store/quotes/quotes.slice";
 
 export enum DrawerType {
     BUY_PRODUCT = "buyProduct"
@@ -17,6 +19,7 @@ interface ProductDrawerContainerProps {
 
 
 const ProductDrawerContainer: FC<ProductDrawerContainerProps> = ({productId, drawerType, open, onClose}) => {
+    const dispatch = useAppDispatch();
     const product = useSelector(selectProductById(productId));
 
     const getTitleBasedOnDrawerType = useMemo(() => {
@@ -28,8 +31,13 @@ const ProductDrawerContainer: FC<ProductDrawerContainerProps> = ({productId, dra
 
     const StepChain = useMemo(() => {
         if (!product) return undefined;
-        return StepChainBuilder.build({title: product.name});
+        return StepChainBuilder.build({productId: product.id});
     }, [product]);
+
+    const handleClose = useCallback(() => {
+        dispatch(clearQuote())
+        onClose();
+    }, [dispatch, onClose])
 
     if (!product || !drawerType || !StepChain) {
         return null;
@@ -40,7 +48,7 @@ const ProductDrawerContainer: FC<ProductDrawerContainerProps> = ({productId, dra
             chain={StepChainBuilder}
             StepChain={StepChain}
             open={open}
-            onClose={onClose}
+            onClose={handleClose}
             title={getTitleBasedOnDrawerType}
         />
     );

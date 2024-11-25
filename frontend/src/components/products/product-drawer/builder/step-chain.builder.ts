@@ -1,12 +1,10 @@
 import {ConditionalStepBuilder} from "../../../../builders/ConditionalStepBuilder";
 import {ProductFlowModel} from "../model/product-flow.model";
-import Step1 from "../steps/step1.component";
-import Step2 from "../steps/step2.component";
-import Step3 from "../steps/step3.component";
+import ProductSummaryStep from "../steps/product-summary/product-summary-step.component";
+import WizardSummaryStep from "../steps/wizard-summary/wizard-summary-step.component";
 
 const StepChainBuilder = new ConditionalStepBuilder<ProductFlowModel>()
-    .add(Step1)
-    .add(Step2)
-    .add(Step3);
+    .add(ProductSummaryStep)
+    .add(WizardSummaryStep);
 
 export default StepChainBuilder;
