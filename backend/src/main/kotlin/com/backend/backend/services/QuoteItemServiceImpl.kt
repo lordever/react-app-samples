@@ -77,6 +77,12 @@ class QuoteItemServiceImpl(
             .collectList()
     }
 
+    override fun delete(quoteItemId: Int): Mono<Void> =
+        characteristicRepository
+            .deleteByQuoteItemId(quoteItemId)
+            .then(priceRepository.deleteByQuoteItemId(quoteItemId))
+            .then(repository.deleteById(quoteItemId))
+
     private fun transformProductCharToQuoteItemChar(
         quoteItemId: Int,
         productCharacteristics: List<CharacteristicDTO>

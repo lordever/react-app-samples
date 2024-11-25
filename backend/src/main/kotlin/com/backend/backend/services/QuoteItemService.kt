@@ -8,4 +8,5 @@ import reactor.core.publisher.Mono
 interface QuoteItemService {
     fun addOne(quoteId: Int, product: ProductDTO): Mono<QuoteItem>
     fun addAll(quoteId: Int, quoteItems: List<QuoteItemDTO>): Mono<List<QuoteItem>>
+    fun delete(quoteItemId: Int): Mono<Void>
 }
