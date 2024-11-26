@@ -4,7 +4,7 @@ import {selectProductById} from "../../../store/products/products.selector";
 import WizardDrawer from "../../wizard-drawer/wizard-drawer.component";
 import StepChainBuilder from "./builder/step-chain.builder";
 import {useAppDispatch} from "../../../hooks/store.hook";
-import {clearQuote} from "../../../store/quotes/quotes.slice";
+import {clearQuote} from "../../../store/product-purchase-flow/product-purchase-flow.slice";
 
 export enum DrawerType {
     BUY_PRODUCT = "buyProduct"
