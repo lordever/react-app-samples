@@ -12,6 +12,7 @@ import {
     Typography
 } from "@mui/material";
 import {useRerenderCount} from "../../../hooks/useRerenderCount";
+import "./product-list.component.css"
 
 interface ProductListProps {
     products?: Product[];
@@ -49,7 +50,10 @@ const ProductList: FC<ProductListProps> = ({products, openDrawer}) => {
                                     ))}
                                 </List>
 
-                                <Button variant="contained" onClick={() => openDrawer(product.id)}>Buy</Button>
+                                <div className="button-bottom">
+                                    <Button variant="contained">Buy</Button>
+                                    <Button variant="contained" onClick={() => openDrawer(product.id)}>Buy as bundle</Button>
+                                </div>
                             </CardContent>
                         </Card>
                     </Grid>
