@@ -96,6 +96,36 @@ const WizardSummaryStep: FC<StepHandlerProps<ProductFlowModel>> = ({onClose, onS
                         </Grid>
                     </CardContent>
                 </Card>
+
+                {quote.totalPrice && (
+                    <Card sx={{marginBottom: 2}}>
+                        <CardHeader title="Total Price"/>
+                        <Divider/>
+                        <CardContent>
+                            <Grid container>
+                                <TableContainer component={Paper}>
+                                    <Table size="small">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Recurrent</TableCell>
+                                                <TableCell>One Time</TableCell>
+                                                <TableCell>Upfront</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell>{quote.totalPrice?.recurrent}</TableCell>
+                                                <TableCell>{quote.totalPrice?.oneTime}</TableCell>
+                                                <TableCell>{quote.totalPrice?.upfront}</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                )}
+
             </Box>
             <WizardToolbar
                 onClose={onClose}

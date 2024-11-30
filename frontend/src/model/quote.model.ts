@@ -5,6 +5,7 @@ export interface Quote {
     name: string;
     type: QuoteTypeEnum;
     quoteItems: QuoteItem[];
+    totalPrice?: QuoteTotalPrice;
 }
 
 export interface QuoteItem {
@@ -24,6 +25,12 @@ export interface QuoteItemCharacteristic {
 
 export interface QuoteItemPrice {
     id?: number;
+    recurrent: number;
+    oneTime: number;
+    upfront: number;
+}
+
+export interface QuoteTotalPrice {
     recurrent: number;
     oneTime: number;
     upfront: number;
