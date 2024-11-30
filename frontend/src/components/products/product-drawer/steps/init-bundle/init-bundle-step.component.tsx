@@ -11,6 +11,7 @@ import ProductCard from "../../components/product-card.component";
 import {useAppDispatch} from "../../../../../hooks/store.hook";
 import {selectProductPurchaseQuoteCreateLoading} from "../../../../../store/bundle-flow/bundle-flow.selector";
 import {addProductsToQuote} from "../../../../../store/bundle-flow/bundle-flow.thunk";
+import {Box} from "@mui/material";
 
 const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepChange, onClose}) => {
     const {product} = context;

@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import {selectProductPurchaseQuote} from "../../../../../store/bundle-flow/bundle-flow.selector";
 import WizardToolbar from "../../../../wizard-drawer/wizard-toolbar.component";
+import "../../../../wizard-drawer/wizard-drawer.component.css"
 
 const SubmitSummaryStep: FC<StepHandlerProps<BundleFlowModel>> = ({onClose, onStepChange}) => {
     const quote = useSelector(selectProductPurchaseQuote);
@@ -29,7 +30,7 @@ const SubmitSummaryStep: FC<StepHandlerProps<BundleFlowModel>> = ({onClose, onSt
     }
 
     return (
-        <>
+        <Box className="step-box">
             <Card sx={{marginBottom: 2}}>
                 <CardHeader
                     title={quote.name}
@@ -133,7 +134,7 @@ const SubmitSummaryStep: FC<StepHandlerProps<BundleFlowModel>> = ({onClose, onSt
                 onClose={onClose}
                 onBack={() => onStepChange(StepPosition.BACK)}
             />
-        </>
+        </Box>
     );
 };
 
