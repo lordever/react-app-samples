@@ -21,7 +21,7 @@ const WizardDrawer: React.FC<WizardDrawerProps> = ({title, open, chain, onClose,
 
     return (
         <Drawer anchor="right" open={open} onClose={onClose} onTransitionExited={() => setCurrentStepIndex(0)}>
-            <Box className="container" width={400} p={3}>
+            <Box className="container">
                 <WizardHeader title={title} onClose={onClose}/>
 
                 <StepChain

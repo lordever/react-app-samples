@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import {StepHandlerProps, StepPosition} from "../../../../../builders/ConditionalStepBuilder";
 import {BundleFlowModel} from "../../model/bundle-flow.model";
 import WizardToolbar from "../../../../wizard-drawer/wizard-toolbar.component";
@@ -9,10 +9,7 @@ import {Product} from "../../../../../model/product.model";
 import "./init-bundle-step.component.css"
 import ProductCard from "../../components/product-card.component";
 import {useAppDispatch} from "../../../../../hooks/store.hook";
-import {
-    selectProductPurchaseQuote,
-    selectProductPurchaseQuoteCreateLoading
-} from "../../../../../store/bundle-flow/bundle-flow.selector";
+import {selectProductPurchaseQuoteCreateLoading} from "../../../../../store/bundle-flow/bundle-flow.selector";
 import {addProductsToQuote} from "../../../../../store/bundle-flow/bundle-flow.thunk";
 
 const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepChange, onClose}) => {
@@ -22,7 +19,6 @@ const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepC
     const [addedProducts, setAddedProducts] = useState<Product[]>([product]);
     const products = useSelector((state: RootState) => selectProductsExcludingId(state, product.id));
     const quotesLoading = useSelector(selectProductPurchaseQuoteCreateLoading);
-    const quote = useSelector(selectProductPurchaseQuote);
 
     const handleAddProduct = useCallback((product: Product) => {
         setAddedProducts((addedProductsState: Product[]) => [...addedProductsState, product])
@@ -30,13 +26,11 @@ const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepC
 
     const handleNext = useCallback(() => {
         dispatch(addProductsToQuote(addedProducts))
+            .unwrap()
+            .then(() => {
+                onStepChange(StepPosition.NEXT);
+            })
     }, [dispatch, addedProducts])
-
-    useEffect(() => {
-        if (quote && !quotesLoading) {
-            onStepChange(StepPosition.NEXT);
-        }
-    }, [onStepChange, quotesLoading, quote]);
 
     return (
         <>
@@ -48,13 +42,12 @@ const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepC
                 />
             ))}
 
-                <WizardToolbar
-                    onClose={onClose}
-                    isBackDisabled
-                    isNextDisabled={addedProducts.length === 0}
-                    isLoading={quotesLoading}
-                    onNext={handleNext}
-                />
+            <WizardToolbar
+                onClose={onClose}
+                isNextDisabled={addedProducts.length <= 1}
+                isLoading={quotesLoading}
+                onNext={handleNext}
+            />
         </>
     );
 };
