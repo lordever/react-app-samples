@@ -26,9 +26,9 @@ class BootstrapData(
         productRepository.count().subscribe { count ->
             if (count == 0L) {
                 val products = listOf(
-                    Product(name = "Mobile line"),
-                    Product(name = "Internet"),
-                    Product(name = "Iphone 14")
+                    Product(name = "Mobile line", type = ProductType.LINE),
+                    Product(name = "Internet", type = ProductType.LINE),
+                    Product(name = "Iphone 14", type = ProductType.DEVICE)
                 )
 
                 val productsSave = Flux.fromIterable(products)

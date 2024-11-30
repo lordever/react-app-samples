@@ -16,6 +16,7 @@ interface QuoteItemMapper {
 
     @Mapping(target = "id", source = "quoteItem.id")
     @Mapping(target = "name", source = "quoteItem.name")
+    @Mapping(target = "type", source = "quoteItem.type")
     @Mapping(target = "prices", source = "prices")
     @Mapping(
         target = "characteristic",

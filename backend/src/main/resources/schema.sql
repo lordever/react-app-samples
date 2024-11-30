@@ -1,7 +1,8 @@
 CREATE TABLE if NOT EXISTS product
 (
     id   integer NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50)
+    name VARCHAR(50),
+    type VARCHAR(50)
 );
 
 CREATE TABLE if NOT EXISTS characteristic
