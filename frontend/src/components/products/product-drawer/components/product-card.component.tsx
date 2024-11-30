@@ -12,12 +12,12 @@ import {
 import {MdExpandMore} from "react-icons/md";
 import {Characteristic, Product} from "../../../../model/product.model";
 
-interface ProductWizardCardProps {
+interface ProductCardProps {
     product: Product;
     onAddProduct: (product: Product) => void;
 }
 
-const ProductWizardCard: FC<ProductWizardCardProps> = ({onAddProduct, product}) => {
+const ProductCard: FC<ProductCardProps> = ({onAddProduct, product}) => {
     return (
         <Card key={product.id} className="product-card">
             <CardHeader title={product.name} className="card-header"/>
@@ -58,4 +58,4 @@ const ProductWizardCard: FC<ProductWizardCardProps> = ({onAddProduct, product}) 
     );
 };
 
-export default memo(ProductWizardCard);
+export default memo(ProductCard);

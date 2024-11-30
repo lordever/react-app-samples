@@ -1,1 +1,0 @@
-export const PRODUCT_PURCHASE_SLICE_NAME = "productPurchaseFlow";

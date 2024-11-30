@@ -1,22 +1,22 @@
 // Define a type for the slice state
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Quote} from "../../model/quote.model";
-import {addProductsToQuote} from "./product-purchase-flow.thunk";
-import {PRODUCT_PURCHASE_SLICE_NAME} from "./product-purchase-flow.constant";
+import {addProductsToQuote} from "./bundle-flow.thunk";
+import {BUNDLE_FLOW_SLICE_NAME} from "./bundle-flow.constant";
 
-interface ProductPurchaseFlowState {
+interface BundleFlowState {
     quote?: Quote | null
     quoteLoading: boolean;
 }
 
 // Define the initial state using that type
-const initialState: ProductPurchaseFlowState = {
+const initialState: BundleFlowState = {
     quote: null,
     quoteLoading: false
 }
 
-export const productPurchaseFlowSlice = createSlice({
-    name: PRODUCT_PURCHASE_SLICE_NAME,
+export const bundleFlowSlice = createSlice({
+    name: BUNDLE_FLOW_SLICE_NAME,
     // `createSlice` will infer the state type from the `initialState` argument
     initialState,
     reducers: {
@@ -41,6 +41,6 @@ export const productPurchaseFlowSlice = createSlice({
     }
 })
 
-export const {clearQuote} = productPurchaseFlowSlice.actions
+export const {clearQuote} = bundleFlowSlice.actions
 
-export default productPurchaseFlowSlice.reducer
+export default bundleFlowSlice.reducer

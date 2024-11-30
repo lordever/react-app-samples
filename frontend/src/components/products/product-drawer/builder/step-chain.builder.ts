@@ -1,10 +1,10 @@
 import {ConditionalStepBuilder} from "../../../../builders/ConditionalStepBuilder";
-import {ProductFlowModel} from "../model/product-flow.model";
-import ProductSummaryStep from "../steps/product-summary/product-summary-step.component";
-import WizardSummaryStep from "../steps/wizard-summary/wizard-summary-step.component";
+import {BundleFlowModel} from "../model/bundle-flow.model";
+import InitBundleStep from "../steps/init-bundle/init-bundle-step.component";
+import SubmitSummaryStep from "../steps/submit-summary/submit-summary-step.component";
 
-const StepChainBuilder = new ConditionalStepBuilder<ProductFlowModel>()
-    .add(ProductSummaryStep)
-    .add(WizardSummaryStep);
+const StepChainBuilder = new ConditionalStepBuilder<BundleFlowModel>()
+    .add(InitBundleStep)
+    .add(SubmitSummaryStep);
 
 export default StepChainBuilder;

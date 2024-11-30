@@ -1,0 +1,1 @@
+export const BUNDLE_FLOW_SLICE_NAME = "bundleFlow";

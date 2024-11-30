@@ -1,11 +1,11 @@
 import {configureStore} from "@reduxjs/toolkit";
 import productsReducer from "./products/products.slice"
-import productPurchaseFlowReducer from "./product-purchase-flow/product-purchase-flow.slice";
+import bundleFlowReducer from "./bundle-flow/bundle-flow.slice";
 
 export const store = configureStore({
     reducer: {
         products: productsReducer,
-        productPurchaseFlow: productPurchaseFlowReducer
+        bundleFlow: bundleFlowReducer
     },
 })
 
