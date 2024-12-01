@@ -7,13 +7,11 @@ import com.backend.backend.domain.QuoteItemType
 import com.backend.backend.mappers.PriceMapper
 import com.backend.backend.mappers.QuoteItemCharacteristicMapper
 import com.backend.backend.mappers.QuoteItemMapper
-import com.backend.backend.model.CharacteristicDTO
-import com.backend.backend.model.ProductDTO
-import com.backend.backend.model.ProductPriceDTO
-import com.backend.backend.model.QuoteItemDTO
+import com.backend.backend.model.*
 import com.backend.backend.repositories.PriceRepository
 import com.backend.backend.repositories.QuoteItemCharacteristicRepository
 import com.backend.backend.repositories.QuoteItemRepository
+import com.backend.backend.services.quote_item_characteristics.QuoteItemCharacteristicsService
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -25,6 +23,7 @@ class QuoteItemServiceImpl(
     val priceRepository: PriceRepository,
     val quoteItemMapper: QuoteItemMapper,
     val quoteItemCharacteristicMapper: QuoteItemCharacteristicMapper,
+    val quoteItemCharacteristicService: QuoteItemCharacteristicsService,
     val priceMapper: PriceMapper,
 ) : QuoteItemService {
     override fun addOne(quoteId: Int, product: ProductDTO): Mono<QuoteItem> {
@@ -76,6 +75,12 @@ class QuoteItemServiceImpl(
             }
             .collectList()
     }
+
+    override fun updateCharacteristics(
+        quoteItemId: Int,
+        characteristics: List<QuoteItemCharacteristicDTO>
+    ): Flux<QuoteItemCharacteristicDTO> =
+        quoteItemCharacteristicService.updateCharacteristicsByQuoteItemId(quoteItemId, characteristics)
 
     override fun delete(quoteItemId: Int): Mono<Void> =
         characteristicRepository
