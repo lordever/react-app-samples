@@ -32,6 +32,13 @@ class QuoteServiceImpl(
             .findById(quoteId)
             .flatMap(this::mapQuoteToDTO)
 
+    override fun findByQuoteItemId(quoteItemId: Int): Mono<QuoteDTO> =
+        quoteItemRepository.findById(quoteItemId)
+            .flatMap { quoteItem ->
+                quoteRepository.findById(quoteItem.quoteId!!)
+            }
+            .flatMap(this::mapQuoteToDTO)
+
     override fun createQuote(quoteDTO: QuoteDTO): Mono<QuoteDTO> {
         val quoteEntity = quoteMapper.toQuote(quoteDTO)
 

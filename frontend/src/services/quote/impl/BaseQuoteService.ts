@@ -1,4 +1,4 @@
-import {QuoteService} from "../model/QuoteService";
+import {QuoteService} from "../interface/QuoteService";
 import {Product} from "../../../model/product.model";
 import {Quote} from "../../../model/quote.model";
 import {prepareCreateQuoteInput} from "../quote.helper";

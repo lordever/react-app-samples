@@ -1,4 +1,4 @@
-import {QuoteService} from "./model/QuoteService";
+import {QuoteService} from "./interface/QuoteService";
 import {BaseQuoteService} from "./impl/BaseQuoteService";
 
 export class QuoteServiceFactory {

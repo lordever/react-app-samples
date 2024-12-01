@@ -4,5 +4,8 @@ import com.backend.backend.model.QuoteItemCharacteristicDTO
 import reactor.core.publisher.Flux
 
 interface QuoteItemCharacteristicsService {
-    fun updateCharacteristicsByQuoteItemId(quoteItemId: Int, characteristics: List<QuoteItemCharacteristicDTO>): Flux<QuoteItemCharacteristicDTO>
+    fun updateCharacteristicsByQuoteItemId(
+        quoteItemId: Int,
+        characteristics: List<QuoteItemCharacteristicDTO>
+    ): Flux<QuoteItemCharacteristicDTO>
 }

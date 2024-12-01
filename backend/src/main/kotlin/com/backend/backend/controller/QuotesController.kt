@@ -3,6 +3,7 @@ package com.backend.backend.controller
 import com.backend.backend.domain.QuoteItem
 import com.backend.backend.model.ProductDTO
 import com.backend.backend.model.QuoteDTO
+import com.backend.backend.model.QuoteItemCharacteristicDTO
 import com.backend.backend.services.QuoteItemService
 import com.backend.backend.services.QuoteService
 import org.springframework.http.HttpStatus
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
@@ -23,6 +25,8 @@ class QuotesController(
 ) {
     companion object {
         const val QUOTES_PATH = "/api/v1/quotes"
+        const val QUOTE_ITEM_PATH = "$QUOTES_PATH/items"
+        const val QUOTE_ITEM_PATH_ID = "$QUOTE_ITEM_PATH/{quoteItemId}"
         const val QUOTES_PATH_ID = "$QUOTES_PATH/{quoteId}"
     }
 
@@ -33,7 +37,7 @@ class QuotesController(
             .switchIfEmpty(Flux.error(ResponseStatusException(HttpStatus.NOT_FOUND)))
 
     @GetMapping(QUOTES_PATH_ID)
-    fun findAll(@PathVariable quoteId: Int): Mono<QuoteDTO> =
+    fun findById(@PathVariable quoteId: Int): Mono<QuoteDTO> =
         quoteService
             .findById(quoteId)
             .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)))
@@ -53,4 +57,17 @@ class QuotesController(
     @DeleteMapping("$QUOTES_PATH/delete-quote-item/{quoteItemId}")
     fun deleteQuoteItem(@PathVariable quoteItemId: Int): Mono<Void> =
         quoteItemService.delete(quoteItemId)
+
+    @PutMapping("$QUOTE_ITEM_PATH_ID/update-characteristics")
+    fun updateQuoteItems(
+        @PathVariable quoteItemId: Int,
+        @RequestBody characteristics: List<QuoteItemCharacteristicDTO>
+    ): Mono<QuoteDTO> {
+        return quoteItemService
+            .updateCharacteristics(quoteItemId, characteristics)
+            .collectList()
+            .flatMap {
+                quoteService.findByQuoteItemId(quoteItemId)
+            }
+    }
 }
