@@ -20,17 +20,16 @@ const WizardDrawer: React.FC<WizardDrawerProps> = ({title, open, chain, onClose,
     }, [chain.steps.length]);
 
     return (
-        <Drawer anchor="right" className="wizard-drawer" open={open} onClose={onClose} onTransitionExited={() => setCurrentStepIndex(0)}>
-            <Box className="wizard-box">
-                <div className="wizard-container">
-                    <WizardHeader title={title} onClose={onClose}/>
+        <Drawer anchor="right" open={open} onClose={onClose}
+                onTransitionExited={() => setCurrentStepIndex(0)}>
+            <Box className="wizard-content">
+                <WizardHeader title={title} onClose={onClose}/>
 
-                    <StepChain
-                        currentStepIndex={currentStepIndex}
-                        onStepIndexChange={handleSetCurrentStepIndexChange}
-                        onClose={onClose}
-                    />
-                </div>
+                <StepChain
+                    currentStepIndex={currentStepIndex}
+                    onStepIndexChange={handleSetCurrentStepIndexChange}
+                    onClose={onClose}
+                />
             </Box>
         </Drawer>
     );

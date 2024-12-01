@@ -21,7 +21,7 @@ const WizardToolbar: FC<WizardToolbarProps> = ({
                                                    onClose
                                                }) => {
     return (
-        <Box className="bottom-toolbar">
+        <Box className="wizard-bottom-toolbar">
             {(onBack || isBackDisabled) && (
                 <Button
                     disabled={isBackDisabled || isLoading}
