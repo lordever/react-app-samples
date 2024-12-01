@@ -1,6 +1,7 @@
 export interface Product {
     id: number;
     name: string;
+    type: ProductType;
     characteristics: Characteristic[];
     prices: ProductPrice[];
 }
@@ -16,4 +17,9 @@ export interface ProductPrice {
     recurrent: number;
     oneTime: number;
     upfront: number;
+}
+
+export enum ProductType {
+    LINE = "LINE",
+    DEVICE = "DEVICE"
 }

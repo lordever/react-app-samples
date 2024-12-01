@@ -7,6 +7,7 @@ export const prepareCreateQuoteInput = (products: Product[]): Quote => {
         type: QuoteItemTypeEnum.ADD,
         product: {
             id: product.id,
+            type: product.type,
             name: product.name,
             characteristics: product.characteristics.map((char) => ({
                 name: char.name,

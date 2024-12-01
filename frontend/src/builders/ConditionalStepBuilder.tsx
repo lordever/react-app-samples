@@ -14,7 +14,7 @@ export interface StepHandlerProps<T> {
 
 interface StepWithHandler<T> {
     component: React.FC<StepHandlerProps<T>>
-    getVisibleStep?: (context: T) => StepWithHandler<T> | undefined
+    isVisible?: (context: T) => boolean
 }
 
 export interface StepChain {
@@ -26,46 +26,69 @@ export interface StepChain {
 export class ConditionalStepBuilder<T> {
     readonly steps: StepWithHandler<T>[] = []
 
-    add(step: React.FC<StepHandlerProps<T>>, getVisibleStep?: (context: T) => StepWithHandler<T> | undefined): this {
-        this.steps.push({component: step, getVisibleStep})
+    add(step: React.FC<StepHandlerProps<T>>, getVisibleStep?: (context: T) => boolean): this {
+        this.steps.push({component: step, isVisible: getVisibleStep})
         return this;
     }
 
     build(initialContext: T): ({
                                    currentStepIndex,
                                    onStepIndexChange,
-                                   onClose
-                               }: StepChain) => (React.JSX.Element | null) {
-        const steps = this.steps
+                                   onClose,
+                               }: StepChain) => React.JSX.Element | null {
+        const steps = this.steps;
 
-        return function StepChain({currentStepIndex, onStepIndexChange, onClose}: StepChain) {
+        return function StepChain({
+                                      currentStepIndex,
+                                      onStepIndexChange,
+                                      onClose,
+                                  }: StepChain): React.JSX.Element | null {
             const [context, setContext] = useState(initialContext);
 
-            const step = steps[currentStepIndex];
-            const visibleStep = step.getVisibleStep ? step.getVisibleStep(context) : step;
-
-            if (visibleStep) {
-                const StepComponent = visibleStep.component;
-
-                const handleStepChange = (position: StepPosition) => {
-                    if (position === StepPosition.NEXT) {
-                        onStepIndexChange(currentStepIndex + 1);
+            const getNextVisibleStepIndex = (currentIndex: number): number | null => {
+                for (let i = currentIndex + 1; i < steps.length; i++) {
+                    const step = steps[i];
+                    if (!step.isVisible || step.isVisible(context)) {
+                        return i;
                     }
+                }
+                return null;
+            };
 
-                    if (position === StepPosition.BACK) {
-                        onStepIndexChange(currentStepIndex - 1);
+            const step = steps[currentStepIndex];
+            const visibleStep = step.isVisible ? step.isVisible(context) : true;
+
+            if (!visibleStep) {
+                const nextIndex = getNextVisibleStepIndex(currentStepIndex);
+                if (nextIndex !== null) {
+                    onStepIndexChange(nextIndex);
+                }
+
+                return null;
+            }
+
+            const StepComponent = step.component;
+            const handleStepChange = (position: StepPosition) => {
+                if (position === StepPosition.NEXT) {
+                    const nextIndex = getNextVisibleStepIndex(currentStepIndex);
+                    if (nextIndex !== null) {
+                        onStepIndexChange(nextIndex);
                     }
                 }
 
-                return <StepComponent
+                if (position === StepPosition.BACK) {
+                    onStepIndexChange(currentStepIndex - 1);
+                }
+            };
+
+            return (
+                <StepComponent
                     context={context}
                     setContext={setContext}
                     onClose={onClose}
                     onStepChange={handleStepChange}
-                />;
-            }
-
-            return null;
+                />
+            );
         };
     }
 }

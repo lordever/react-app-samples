@@ -5,6 +5,7 @@ import WizardDrawer from "../../wizard-drawer/wizard-drawer.component";
 import StepChainBuilder from "./builder/step-chain.builder";
 import {useAppDispatch} from "../../../hooks/store.hook";
 import {clearQuote} from "../../../store/bundle-flow/bundle-flow.slice";
+import {ProductType} from "../../../model/product.model";
 
 export enum DrawerType {
     BUY_PRODUCT = "buyProduct"
@@ -31,7 +32,11 @@ const ProductDrawerContainer: FC<ProductDrawerContainerProps> = ({productId, dra
 
     const StepChain = useMemo(() => {
         if (!product) return undefined;
-        return StepChainBuilder.build({product});
+        return StepChainBuilder.build({
+            product,
+            hasDevice: product.type === ProductType.DEVICE,
+            hasLine: product.type === ProductType.DEVICE
+        });
     }, [product]);
 
     const handleClose = useCallback(() => {

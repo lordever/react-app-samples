@@ -5,13 +5,12 @@ import WizardToolbar from "../../../../wizard-drawer/wizard-toolbar.component";
 import {useSelector} from "react-redux";
 import {selectProductsExcludingId} from "../../../../../store/products/products.selector";
 import {RootState} from "../../../../../store/store";
-import {Product} from "../../../../../model/product.model";
+import {Product, ProductType} from "../../../../../model/product.model";
 import "./init-bundle-step.component.css"
 import ProductCard from "../../components/product-card.component";
 import {useAppDispatch} from "../../../../../hooks/store.hook";
 import {selectProductPurchaseQuoteCreateLoading} from "../../../../../store/bundle-flow/bundle-flow.selector";
 import {addProductsToQuote} from "../../../../../store/bundle-flow/bundle-flow.thunk";
-import {Box} from "@mui/material";
 
 const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepChange, onClose}) => {
     const {product} = context;
@@ -26,12 +25,14 @@ const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepC
     }, [])
 
     const handleNext = useCallback(() => {
+        context.hasLine = addedProducts.some(product => product.type === ProductType.LINE)
+        context.hasDevice = addedProducts.some(product => product.type === ProductType.DEVICE)
         dispatch(addProductsToQuote(addedProducts))
             .unwrap()
             .then(() => {
                 onStepChange(StepPosition.NEXT);
             })
-    }, [dispatch, addedProducts])
+    }, [dispatch, addedProducts, onStepChange])
 
     return (
         <>
