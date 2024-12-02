@@ -7,9 +7,9 @@ import {selectProductsExcludingId} from "../../../../../store/products/products.
 import {RootState} from "../../../../../store/store";
 import {Product, ProductType} from "../../../../../model/product.model";
 import "./init-bundle-step.component.css"
-import ProductCard from "../../components/product-card.component";
+import ProductCard from "../../components/product-card/product-card.component";
 import {useAppDispatch} from "../../../../../hooks/store.hook";
-import {selectProductPurchaseQuoteCreateLoading} from "../../../../../store/bundle-flow/bundle-flow.selector";
+import {selectBundleFlowQuoteCreateLoading} from "../../../../../store/bundle-flow/bundle-flow.selector";
 import {addProductsToQuote} from "../../../../../store/bundle-flow/bundle-flow.thunk";
 
 const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepChange, onClose}) => {
@@ -18,7 +18,7 @@ const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepC
 
     const [addedProducts, setAddedProducts] = useState<Product[]>([product]);
     const products = useSelector((state: RootState) => selectProductsExcludingId(state, product.id));
-    const quotesLoading = useSelector(selectProductPurchaseQuoteCreateLoading);
+    const quotesLoading = useSelector(selectBundleFlowQuoteCreateLoading);
 
     const handleAddProduct = useCallback((product: Product) => {
         setAddedProducts((addedProductsState: Product[]) => [...addedProductsState, product])
@@ -32,7 +32,7 @@ const InitBundleStep: FC<StepHandlerProps<BundleFlowModel>> = ({context, onStepC
             .then(() => {
                 onStepChange(StepPosition.NEXT);
             })
-    }, [dispatch, addedProducts, onStepChange])
+    }, [dispatch, addedProducts, onStepChange, context])
 
     return (
         <>

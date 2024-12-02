@@ -1,7 +1,7 @@
 // Define a type for the slice state
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Quote} from "../../model/quote.model";
-import {addProductsToQuote} from "./bundle-flow.thunk";
+import {addProductsToQuote, updateCharacteristicsOnQuote} from "./bundle-flow.thunk";
 import {BUNDLE_FLOW_SLICE_NAME} from "./bundle-flow.constant";
 
 interface BundleFlowState {
@@ -33,6 +33,18 @@ export const bundleFlowSlice = createSlice({
                 state.quoteLoading = false
             })
             .addCase(addProductsToQuote.fulfilled, (state, action: PayloadAction<Quote>) => {
+                if (action.payload) {
+                    state.quote = action.payload;
+                }
+                state.quoteLoading = false;
+            })
+            .addCase(updateCharacteristicsOnQuote.pending, (state) => {
+                state.quoteLoading = true
+            })
+            .addCase(updateCharacteristicsOnQuote.rejected, (state) => {
+                state.quoteLoading = false
+            })
+            .addCase(updateCharacteristicsOnQuote.fulfilled, (state, action: PayloadAction<Quote | undefined>) => {
                 if (action.payload) {
                     state.quote = action.payload;
                 }

@@ -10,7 +10,7 @@ import {
     Typography
 } from "@mui/material";
 import {MdExpandMore} from "react-icons/md";
-import {Characteristic, Product} from "../../../../model/product.model";
+import {Characteristic, Product} from "../../../../../model/product.model";
 
 interface ProductCardProps {
     product: Product;

@@ -18,12 +18,12 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import {selectProductPurchaseQuote} from "../../../../../store/bundle-flow/bundle-flow.selector";
+import {selectBundleFlowQuote} from "../../../../../store/bundle-flow/bundle-flow.selector";
 import WizardToolbar from "../../../../wizard-drawer/wizard-toolbar.component";
 import "../../../../wizard-drawer/wizard-drawer.component.css"
 
 const SubmitSummaryStep: FC<StepHandlerProps<BundleFlowModel>> = ({onClose, onStepChange}) => {
-    const quote = useSelector(selectProductPurchaseQuote);
+    const quote = useSelector(selectBundleFlowQuote);
 
     if (!quote) {
         return null;

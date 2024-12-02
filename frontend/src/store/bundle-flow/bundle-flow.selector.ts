@@ -1,4 +1,4 @@
 import {RootState} from "../store";
 
-export const selectProductPurchaseQuoteCreateLoading = (state: RootState) => state.bundleFlow.quoteLoading
-export const selectProductPurchaseQuote = (state: RootState) => state.bundleFlow.quote
+export const selectBundleFlowQuoteCreateLoading = (state: RootState) => state.bundleFlow.quoteLoading
+export const selectBundleFlowQuote = (state: RootState) => state.bundleFlow.quote
