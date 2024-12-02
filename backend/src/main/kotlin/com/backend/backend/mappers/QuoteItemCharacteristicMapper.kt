@@ -1,6 +1,7 @@
 package com.backend.backend.mappers
 
 import com.backend.backend.domain.QuoteItemCharacteristic
+import com.backend.backend.model.CharacteristicDTO
 import com.backend.backend.model.QuoteItemCharacteristicDTO
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
@@ -9,6 +10,8 @@ import org.mapstruct.Mapping
 interface QuoteItemCharacteristicMapper {
     @Mapping(target = "value", source = "valueText")
     fun toDTO(characteristic: QuoteItemCharacteristic): QuoteItemCharacteristicDTO
+
+    fun toDTO(productCharacteristic: CharacteristicDTO): QuoteItemCharacteristicDTO
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "quoteItemId", target = "quoteItemId")

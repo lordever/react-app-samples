@@ -1,13 +1,15 @@
 import {QuoteService} from "../interface/QuoteService";
 import {Product} from "../../../model/product.model";
 import {Quote} from "../../../model/quote.model";
-import {prepareCreateQuoteInput} from "../quote.helper";
+import {prepareCreateQuoteInput} from "../helpers/quote.helper";
+import {Simulate} from "react-dom/test-utils";
 
-export class BaseQuoteService implements QuoteService {
+
+export class BaseQuoteService extends QuoteService {
     async createQuote(products: Product[]): Promise<Quote> {
         try {
             const quoteInput = prepareCreateQuoteInput(products);
-            const response = await fetch("/api/v1/quotes", {
+            const response = await fetch(this.url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

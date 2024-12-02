@@ -5,6 +5,6 @@ data class QuoteItemDTO(
     var name: String,
     var type: QuoteItemTypeDTO,
     var product: ProductDTO,
-    var characteristic: List<QuoteItemCharacteristicDTO>,
+    var characteristic: List<QuoteItemCharacteristicDTO>?,
     var prices: List<QuoteItemPriceDTO>
 )

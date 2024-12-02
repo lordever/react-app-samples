@@ -1,5 +1,12 @@
 import {Characteristic} from "../../../model/product.model";
+import {Quote} from "../../../model/quote.model";
 
-export interface QuoteItemService {
-    updateQuoteItemCharacteristics(quoteItemId: number, characteristics: Characteristic[]): Promise<Characteristic[]>
+export abstract class QuoteItemService {
+    protected readonly url: string;
+
+    constructor(url: string) {
+        this.url = url;
+    }
+
+    abstract updateCharacteristics(quoteItemId: number, characteristics: Characteristic[]): Promise<Quote | undefined>
 }

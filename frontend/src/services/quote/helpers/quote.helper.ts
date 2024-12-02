@@ -1,5 +1,5 @@
-import {Product} from "../../model/product.model";
-import {Quote, QuoteItem, QuoteItemTypeEnum, QuoteTypeEnum} from "../../model/quote.model";
+import {Product} from "../../../model/product.model";
+import {Quote, QuoteItem, QuoteItemTypeEnum, QuoteTypeEnum} from "../../../model/quote.model";
 
 export const prepareCreateQuoteInput = (products: Product[]): Quote => {
     const quoteItems: QuoteItem[] = products.map((product) => ({

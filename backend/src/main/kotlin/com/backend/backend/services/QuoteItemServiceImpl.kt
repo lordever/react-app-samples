@@ -56,9 +56,10 @@ class QuoteItemServiceImpl(
                 val updatedQuoteItem = quoteItemMapper.toQuoteItemByQuoteId(quoteItem, quoteId = quoteId)
                 repository.save(updatedQuoteItem)
                     .flatMap { savedQuoteItem: QuoteItem ->
-                        val characteristics = quoteItem.characteristic.map { characteristic ->
+                        val characteristics = quoteItem.product.characteristics.map { productCharacteristic ->
+                            val quoteItemCharacteristicDTO = quoteItemCharacteristicMapper.toDTO(productCharacteristic)
                             quoteItemCharacteristicMapper.toCharacteristicByQuoteItemId(
-                                characteristic,
+                                quoteItemCharacteristicDTO,
                                 savedQuoteItem.id!!
                             )
                         }
