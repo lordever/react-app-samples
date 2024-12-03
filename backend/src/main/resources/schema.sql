@@ -9,7 +9,7 @@ CREATE TABLE if NOT EXISTS characteristic
 (
     id         integer NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name       VARCHAR(50),
-    value_text VARCHAR(255),
+    mandatory  BOOLEAN,
     product_id integer REFERENCES product (id)
 );
 

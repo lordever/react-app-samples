@@ -1,10 +1,8 @@
 package com.backend.backend.services.quote_item_characteristics.update
 
-import com.backend.backend.domain.Characteristic
 import com.backend.backend.domain.ProductType
 import com.backend.backend.domain.QuoteItemCharacteristic
 import com.backend.backend.mappers.QuoteItemCharacteristicMapper
-import com.backend.backend.model.CharacteristicDTO
 import com.backend.backend.model.QuoteItemCharacteristicDTO
 import com.backend.backend.repositories.QuoteItemCharacteristicRepository
 import com.backend.backend.services.quote_item_characteristics.QuoteItemItemCharacteristicsServiceImpl.Companion.addUpdateCharacteristicStrategy

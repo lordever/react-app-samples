@@ -45,11 +45,11 @@ class BootstrapData(
 
     private fun saveCharacteristics(products: List<Product>): Mono<Void> {
         val characteristics = listOf(
-            Characteristic(name = "Phone Number", valueText = "+111111111", productId = products[0].id),
-            Characteristic(name = "Type", valueText = "Fiber", productId = products[1].id),
-            Characteristic(name = "Speed", valueText = "100 Mbps", productId = products[1].id),
-            Characteristic(name = "Storage", valueText = "128 GB", productId = products[2].id),
-            Characteristic(name = "Color", valueText = "Midnight", productId = products[2].id)
+            Characteristic(name = "Phone Number", mandatory = true, productId = products[0].id),
+            Characteristic(name = "Type", mandatory = true, productId = products[1].id),
+            Characteristic(name = "Speed", mandatory = false, productId = products[1].id),
+            Characteristic(name = "Storage", mandatory = true, productId = products[2].id),
+            Characteristic(name = "Color", mandatory = true, productId = products[2].id)
         )
 
         return characteristicRepository.saveAll(characteristics).then()

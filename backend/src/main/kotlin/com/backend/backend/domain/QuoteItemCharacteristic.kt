@@ -7,5 +7,5 @@ data class QuoteItemCharacteristic(
     var id: Int? = null,
     var quoteItemId: Int? = null,
     var name: String,
-    var valueText: String
+    var valueText: String? = null
 )

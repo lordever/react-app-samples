@@ -7,5 +7,5 @@ data class Characteristic(
     var id: Int? = null,
     var productId: Int? = null,
     var name: String,
-    var valueText: String
+    var mandatory: Boolean
 )

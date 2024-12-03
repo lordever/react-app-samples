@@ -93,13 +93,14 @@ class QuoteItemServiceImpl(
         quoteItemId: Int,
         productCharacteristics: List<CharacteristicDTO>
     ): List<QuoteItemCharacteristic> {
-        return productCharacteristics.map { productChar ->
-            QuoteItemCharacteristic(
-                quoteItemId = quoteItemId,
-                name = productChar.name,
-                valueText = productChar.value
-            )
-        }
+        return productCharacteristics
+            .filter { productChar -> productChar.mandatory }
+            .map { productChar ->
+                QuoteItemCharacteristic(
+                    quoteItemId = quoteItemId,
+                    name = productChar.name,
+                )
+            }
     }
 
     private fun transformProductPriceToQuoteItemPrice(
