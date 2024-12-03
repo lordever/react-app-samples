@@ -7,14 +7,20 @@ import {Characteristic} from "../../../../../model/product.model";
 import {List, ListItem, ListItemText} from "@mui/material";
 import LineCharacteristicInput from "../../components/line-characteristic-input/line-characteristic-input.component";
 import {useSelector} from "react-redux";
-import {selectBundleFlowQuote} from "../../../../../store/bundle-flow/bundle-flow.selector";
+import {
+    selectBundleFlowQuote,
+    selectBundleFlowQuoteCreateLoading
+} from "../../../../../store/bundle-flow/bundle-flow.selector";
 import {PHONE_NUMBER_CHARACTERISTIC} from "../../../../../common/constants";
 import {updateCharacteristicsOnQuote} from "../../../../../store/bundle-flow/bundle-flow.thunk";
 import {useAppDispatch} from "../../../../../hooks/store.hook";
+import {isSomeCharEmpty} from "./line-chars-step.util";
 
 const LineCharsStep: FC<StepHandlerProps<BundleFlowModel>> = ({onClose, onStepChange}) => {
     const quote = useSelector(selectBundleFlowQuote);
     const dispatch = useAppDispatch()
+    const quotesLoading = useSelector(selectBundleFlowQuoteCreateLoading);
+
     const [quoteItemChar, setQuoteItemChar] = useState<{
         quoteItemId: number,
         char: { charId: number, value: string }
@@ -30,6 +36,10 @@ const LineCharsStep: FC<StepHandlerProps<BundleFlowModel>> = ({onClose, onStepCh
     ), [quote]);
 
     const handleNext = useCallback(() => {
+        if (isSomeCharEmpty(quoteItemChar)) {
+            return;
+        }
+
         const quoteItemId = quoteItemChar?.quoteItemId!;
         const char: Characteristic = {
             id: quoteItemChar?.char?.charId,
@@ -80,6 +90,7 @@ const LineCharsStep: FC<StepHandlerProps<BundleFlowModel>> = ({onClose, onStepCh
             </List>
 
             <WizardToolbar
+                isLoading={quotesLoading}
                 onClose={onClose}
                 onNext={handleNext}
                 onBack={handleBack}

@@ -16,10 +16,14 @@ const LineCharacteristicInput: FC<LineCharacteristicInputProps> = ({onChange, de
         onChange(newValue);
     }, [onChange])
 
+    const isEmpty = value?.trim().length === 0;
+
     return (
         <TextField
+            error={isEmpty}
             label="Phone Number"
             variant="outlined"
+            helperText={isEmpty ? "Empty field" : ""}
             value={value}
             defaultValue={defaultValue}
             onChange={handlePhoneNumberChange}/>
